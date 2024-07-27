@@ -28,14 +28,21 @@ public class App {
         try {
             Files.createDirectories(destDir);
             if (filePath.toString().endsWith(".java")) {
-                RepositoryParser.parseJavaFile(filePath, destDir);
+                processJavaFile(filePath, destDir);
             } else {
-                // Copy non-java files as they are
-                Path destFile = destRepo.resolve(relativePath);
-                Files.copy(filePath, destFile, StandardCopyOption.REPLACE_EXISTING);
+                copyNonJavaFile(filePath, destRepo, relativePath);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static void processJavaFile(Path filePath, Path destDir) throws IOException {
+        RepositoryParser.parseJavaFile(filePath, destDir);
+    }
+
+    private static void copyNonJavaFile(Path filePath, Path destRepo, String relativePath) throws IOException {
+        Path destFile = destRepo.resolve(relativePath);
+        Files.copy(filePath, destFile, StandardCopyOption.REPLACE_EXISTING);
     }
 }
